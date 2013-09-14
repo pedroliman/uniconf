@@ -9,7 +9,7 @@ shinyServer(function(input, output) {
     b.dados <- c(3,1,5,9)
     # Calculando medidas descriticas d b ----
     # Comparando-as, qual das duas apresenta maior variabilidade?
-    # Somando v
+    # Somando vb:
     b.somadados <- sum(b.dados)
     # Resgatando n de vb:
     b.n <- as.numeric(length(b.dados))
@@ -19,7 +19,7 @@ shinyServer(function(input, output) {
     b.variancia <- sum((b.dados - b.media)^2)/(b.n - 1)
     b.desviop <- sqrt(b.variancia)
     # Calculando os coeficientes de Variação ----
-    a.cv <- sqrt(input$ia.variancia) / input$ia.media
+    a.cv <- a.desviop / input$ia.media
     b.cv <- b.desviop / b.media
     # Definindo o Resultado da questão ----
     if (a.cv > b.cv) {
@@ -49,7 +49,7 @@ shinyServer(function(input, output) {
       ValoresA = as.character(c(
         input$ia.media,
         input$ia.variancia,
-        sqrt(input$ia.variancia),
+        a.desviop,
         "N/A",
         "N/A",
         a.cv
