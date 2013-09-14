@@ -4,9 +4,7 @@ shinyServer(function(input, output) {
   
   # Retorna as respostas de forma reativa usando o algoritmo que fiz antes:
   geraresposta <- reactive ({
-    a.media <- input$ia.media
-    a.variancia <- input$ia.variancia
-    a.desviop <- sqrt(a.variancia)
+    a.desviop <- sqrt(input$ia.variancia)
     # Uma outra variável B apresentou as seguintes observações: 3, 1, 5 e 9.
     b.dados <- c(3,1,5,9)
     # Calculando medidas descriticas d b ----
@@ -21,7 +19,7 @@ shinyServer(function(input, output) {
     b.variancia <- sum((b.dados - b.media)^2)/(b.n - 1)
     b.desviop <- sqrt(b.variancia)
     # Calculando os coeficientes de Variação ----
-    a.cv <- a.desviop / a.media
+    a.cv <- a.desviop / input$ia.media
     b.cv <- b.desviop / b.media
     # Definindo o Resultado da questão ----
     if (a.cv > b.cv) {
@@ -36,8 +34,45 @@ shinyServer(function(input, output) {
     
   })
   
+  dados <- reactive ({
+    
+    data.frame(
+      
+      Nome = c(
+        "Média",
+        "Variância",
+        "Desvio Padrao",
+        "n",
+        "Soma x",
+        "Coeficiente de Variação"
+        ),
+      ValoresA = as.character(c(
+        input$ia.media,
+        input$ia.variancia,
+        a.desviop,
+        "N/A",
+        "N/A",
+        a.cv
+        )),
+      ValoresB = as.character(c(
+        b.media,
+        b.variancia,
+        b.desviop,
+        b.n,
+        b.somadados,
+        b.cv
+        )),
+      stringsAsFactors=FALSE
+      )
+    
+  })
+  
   output$resposta <- renderText({
     geraresposta()
+  })
+  
+  output$tabela <- renderTable({
+    dados()
   })
   
 })
