@@ -1,8 +1,29 @@
 library(shiny)
 
+CalculaCV <- reactive ({
+  
+  dados <- x
+  dados.soma <- sum(x)
+  n <- as.numeric(length(dados))
+  m <- dados.soma / n
+  va <- sum((dados - m)^2)/(n - 1)
+  dp <- sqrt(va)
+  cv <- dp / m
+  return(list(media=m, variancia=va, desviop=dp, n=n, cv=cv))
+})
+
+a.desviop <- 0
+a.cv <- 0
+b.media <- 0
+b.variancia <- 0
+b.desviop <- 0
+b.n <- 0
+b.cv <- 0
+
 shinyServer(function(input, output) {
   
-  # Retorna as respostas de forma reativa usando o algoritmo que fiz antes:
+    # Retorna as respostas de forma reativa usando o algoritmo que fiz antes:
+
   geraresposta <- reactive ({
     a.desviop <- sqrt(input$ia.variancia)
     # Uma outra variável B apresentou as seguintes observações: 3, 1, 5 e 9.
@@ -10,14 +31,13 @@ shinyServer(function(input, output) {
     # Calculando medidas descriticas d b ----
     # Comparando-as, qual das duas apresenta maior variabilidade?
     # Somando vb:
-    b.somadados <- sum(b.dados)
+    b.n <- CalculaCV(b.dados)$n
     # Resgatando n de vb:
-    b.n <- as.numeric(length(b.dados))
     # Tirando a Média de vb:
-    b.media <- b.somadados / b.n
+    b.media <- CalculaCV(b.dados)$media
     # Obtendo a variância de vb sem usar uma função já pré-moldada
-    b.variancia <- sum((b.dados - b.media)^2)/(b.n - 1)
-    b.desviop <- sqrt(b.variancia)
+    b.variancia <- CalculaCV(b.dados)$variancia
+    b.desviop <- CalculaCV(b.dados)$desviop
     # Calculando os coeficientes de Variação ----
     a.cv <- a.desviop / input$ia.media
     b.cv <- b.desviop / b.media
@@ -36,6 +56,7 @@ shinyServer(function(input, output) {
   
   dados <- reactive ({
     
+    
     data.frame(
       
       Nome = c(
@@ -43,23 +64,25 @@ shinyServer(function(input, output) {
         "Variância",
         "Desvio Padrao",
         "n",
-        "Soma x",
         "Coeficiente de Variação"
         ),
-      ValoresA = as.character(c(
+      
+      ValoresA = as.character
+      (c
+       (
         input$ia.media,
         input$ia.variancia,
         a.desviop,
         "N/A",
-        "N/A",
         a.cv
-        )),
+        )
+       ),
+      
       ValoresB = as.character(c(
         b.media,
         b.variancia,
         b.desviop,
         b.n,
-        b.somadados,
         b.cv
         )),
       stringsAsFactors=FALSE
