@@ -1,0 +1,3 @@
+Pacotes usados plelo cara que fez o mapa de linguagem dos estados Unidos:
+
+fields, maps, mapproj, plyr, RANN, RColorBrewer, scales, zipcode. And, of course, shiny.
