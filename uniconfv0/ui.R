@@ -1,21 +1,22 @@
 library(shiny)
 shinyUI(pageWithSidebar
   (
-    headerPanel("Uniconf - Confiabilidade Quantitativa"),
-    
+    headerPanel("Confiabilidade Quantitativa"),
     sidebarPanel
-    (
-      helpText("Este aplicativo le um arquivo de dados e retorna a distribuicao weibull de maior aderencia aos dados. Na versao atual nao realizamos testes de aderencia.")
+    (width = 3,
+      helpText("Este app le um arquivo de dados e retorna a distribuicao weibull de maior aderencia aos dados."),
+      helpText("Sobre: Este app foi desenvolvido por Pedro Nascimento de Lima."),
+      fileInput('arquivo', 'Escolha um arquivo CSV',
+                accept=c('text/csv', 'text/comma-separated-values,text/plain'))
     ),
     
     mainPanel
-    (
+    (width = 9,
       tabsetPanel(
         # Upload ----
-        tabPanel("Upload dos Dados", 
+        tabPanel("Conf. Upload dos Dados", 
                  helpText("Insira seus dados em uma coluna do excel e salve com a extensao .csv. Somente depois, importe este arquivo."),
-                 fileInput('arquivo', 'Escolha um arquivo CSV',
-                           accept=c('text/csv', 'text/comma-separated-values,text/plain')),
+                 
               #   tags$hr(),
                  checkboxInput('header', 'Primeira linha é o titulo', TRUE),
                  
@@ -40,29 +41,54 @@ shinyUI(pageWithSidebar
         # Resumo dos Dados ----
         tabPanel("Resumo", 
                 helpText("Veja abaixo o Tempo Médio ate a falha (MTTF), os Parâmetros Beta e Eta, e um histograma mostrando a distribuicao de seus dados."),
-                verbatimTextOutput("informamttf"),
-                verbatimTextOutput("beta"),
-                verbatimTextOutput("eta"),
-                plotOutput("histograma")
+                fluidRow(
+                  column(3,verbatimTextOutput("informamttf")),
+                  column(3,verbatimTextOutput("beta")),
+                  column(3,verbatimTextOutput("eta"))
+                ),
+                fluidRow(
+                  column(6,plotOutput("histograma")),
+                  column(6,
+                         numericInput(inputId="tempo",label="Para este tempo...",min=0,max=2000,value=20),
+                         helpText("A confiabilidade do equipamento sera de"),
+                         textOutput("confiabilidadeestimada"))
+                )
+                
                 # plotOutput("dispersao")
                  
                  ),
         
-        tabPanel("Confiabilidade Weibull", 
-                 helpText("O grafico abaixo mostra o comportamento da confiabilidade de acordo com a evolucao do tempo, assumindo aderencia a distribuicao weibull."),
-                 plotOutput("confiabilidade"),
-                 numericInput(inputId="tempo",label="Para este tempo...",min=0,max=10000,value=0),
-                 helpText("A confiabilidade do equipamento sera de"),
-                 textOutput("confiabilidadeestimada")
-                 # plotOutput("dispersao")
+        tabPanel("Confiabilidade Weibull",
+                 sliderInput("tempo_maximo", "Defina o tempo maximo do grafico",min=5,max=1000,value=200),
                  
+                 fluidRow(
+                   
+                   column(4,
+                          plotOutput("confiabilidade"),
+                          helpText("O grafico acima mostra o comportamento da confiabilidade de acordo com a evolucao do tempo, assumindo aderencia a distribuicao weibull.")
+                   ),
+                   column(4,
+                          plotOutput("probfalha"),
+                          helpText("O grafico acima mostra a probabilidade de falha do equipamento.")
+                   ),
+                   column(4,
+                          plotOutput("taxadefalha"),
+                          helpText("O grafico abaixo mostra a densidade de falha do equipamento.")
+                   )
+                 )
+                 
+                 
+        ),
+        tabPanel("Teste de Aderencia",
+                 fluidRow(
+                   column(6,
+                          plotOutput("graficosFit")
+                          ),
+                   column(6,
+                          htmlOutput("statsFit")
+                          )
+                 )
         )
-        
-#         , 
-#         # Grafico  ----
-#         tabPanel("Comportamento dos Dados", 
-#                  helpText("Este app irá mostrar alguns conceitos de estatistica descritiva importantes. Utilize um arquivo com uma coluna de dados numericos.")
-#                  )
     )
     )
   )

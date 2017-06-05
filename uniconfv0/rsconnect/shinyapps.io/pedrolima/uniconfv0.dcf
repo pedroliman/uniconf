@@ -3,6 +3,9 @@ title:
 account: pedrolima
 server: shinyapps.io
 appId: 185723
-bundleId: 850430
+bundleId: 852159
 url: https://pedrolima.shinyapps.io/uniconfv0/
-when: 1496406630.08924
+when: 1496536326.51657
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|deploy.R|falhas_simuladas.txt|falhas_simuladas_fim_vida_util.txt|falhas_simuladas_infantil.txt|falhas_simuladas_todas.txt|falhas_simuladas_vida_util.txt|falhas_simuladasx.txt|falhas_teste.txt|falhas_teste_3.txt|falhas_teste_4.txt|falhas_teste_5.txt|falhas_teste_6.txt|falhas_teste_7.txt|falhas_teste_8.txt|falhas_teste_9.txt|simular_falhas.R|t.txt|t_fim_vida_util.txt|t_infantil.txt|t_todas.txt|t_vida_util.txt|teste_weibull.R
